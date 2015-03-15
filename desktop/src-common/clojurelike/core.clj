@@ -21,9 +21,7 @@
   [screen entities]
   (doseq [{:keys [x y player?]} entities]
     (when player?
-      (position! screen x y)
-      ;(println "x: " x "; y:" y)
-      ))
+      (position! screen x y)))
   entities)
 
 (defn update-position
@@ -38,10 +36,13 @@
                   :up (+ y speed)
                   :down (- y speed)
                   y)]
-      (when-let [anim (get entity direction)]
+      (if (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
+        (when-let [anim (get entity direction)]
+          (merge entity
+                 (get entity direction)
+                 {:x new-x :y new-y}))
         (merge entity
-               (get entity direction)
-               {:x new-x :y new-y})))
+          (get entity direction))))
     entity))
 
 (defn move-all
@@ -60,8 +61,8 @@
       :up up
       :down down
       :player? true
-      :x 1
-      :y 1
+      :x 8
+      :y 8
       :width 1
       :height 1)))
 
@@ -81,6 +82,9 @@
 
            :on-key-down
            (fn [screen entities]
+             (cond
+               (key-pressed? :NUM_0) (.setVisible (tiled-map-layer screen "casa") false)
+               (key-pressed? :NUM_1) (.setVisible (tiled-map-layer screen "casa") true))
              (if-let [dir (get-direction)]
                (move-all screen entities dir)
                entities))
@@ -93,5 +97,3 @@
   :on-create
   (fn [this]
     (set-screen! this main-screen)))
-
-;; (on-gl (set-screen! clojurelike main-screen))
