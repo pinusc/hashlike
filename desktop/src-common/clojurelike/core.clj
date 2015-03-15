@@ -3,7 +3,7 @@
             [play-clj.g2d :refer :all]
             [play-clj.ui :refer :all]))
 (def blue (color 63/255 124/255 172/255 1))
-(def speed 1/4)
+(def speed 1)
 
 (declare main-screen)
 
@@ -75,12 +75,15 @@
            :on-render
            (fn [screen entities]
              (clear! 63/255 124/255 172/255 1)
-             (->> (if-let [dir (get-direction)]
-                    (move-all screen entities dir)
-                    entities)
-                  (render! screen)
-                  (update-screen! screen)))
+             (->> entities
+                  (update-screen! screen)
+                  (render! screen)))
 
+           :on-key-down
+           (fn [screen entities]
+             (if-let [dir (get-direction)]
+               (move-all screen entities dir)
+               entities))
 
            :on-resize
            (fn [screen entities]
