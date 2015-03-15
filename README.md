@@ -1,15 +1,15 @@
 ## Introduction
 
-A play-clj game in which ... well, that part is up to you.
+An attempt to write a roguelite game in clojure using libGDX with play-clj... Currently working for desktop only.
 
 ## Contents
 
-* `android/src` Android-specific code
+* `android/src` Android-specific code, not working
 * `desktop/resources` Images, audio, and other files
 * `desktop/src` Desktop-specific code
 * `desktop/src-common` Cross-platform game code
-* `ios/src` iOS-specific code
+* `ios/src` iOS-specific code, not working
 
 ## Building
 
-All projects can be built using [Nightcode](https://nightcode.info/), or on the command line using [Leiningen](https://github.com/technomancy/leiningen) with the [lein-droid](https://github.com/clojure-android/lein-droid) and [lein-fruit](https://github.com/oakes/lein-fruit) plugins.
+All projects can be built using [Nightcode](https://nightcode.info/), or on the command line using [Leiningen](https://github.com/technomancy/leiningen)
