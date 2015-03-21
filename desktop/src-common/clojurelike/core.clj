@@ -1,7 +1,8 @@
 (ns clojurelike.core
   (:require [play-clj.core :refer :all]
             [play-clj.g2d :refer :all]
-            [play-clj.ui :refer :all]))
+            [play-clj.ui :refer :all]
+            [clojurelike.entities :as en]))
 (def blue (color 63/255 124/255 172/255 1))
 (def speed 1)
 
@@ -26,7 +27,7 @@
 
 (defn update-position
   "Moves the player by checking get-direction and then modifying x or y"
-  [screen {:keys [player? x y] :as entity} direction]
+  [screen entities {:keys [player? x y] :as entity} direction]
   (if player?
     (let [new-x (case direction
                   :right (+ x speed)
@@ -36,7 +37,8 @@
                   :up (+ y speed)
                   :down (- y speed)
                   y)]
-      (if (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
+      (if (and (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
+               (not (en/isthereanybody new-x, new-y entities)))
         (when-let [anim (get entity direction)]
           (merge entity
                  (get entity direction)
@@ -47,7 +49,7 @@
 
 (defn move-all
   [screen entities direction]
-  (map #(update-position screen % direction) entities))
+  (map #(update-position screen entities % direction) entities))
 
 (defn create-player
   []
@@ -61,17 +63,18 @@
       :up up
       :down down
       :player? true
-      :x 8
-      :y 8
+      :living? true
+      :x 1
+      :y 1
       :width 1
       :height 1)))
 
 (defscreen main-screen
            :on-show
            (fn [screen entities]
-             (->> (orthogonal-tiled-map "level.tmx" (/ 1 16))
+             (->> (orthogonal-tiled-map "map.tmx" (/ 1 16))
                   (update! screen :camera (orthographic) :renderer))
-             (create-player))
+             [(create-player) (en/create-cowboy)])
 
            :on-render
            (fn [screen entities]
