@@ -4,6 +4,7 @@
             [play-clj.ui :refer :all]
             [clojurelike.entities :as en]))
 (def speed 1)
+(def mode :move)
 
 (declare main-screen)
 
@@ -19,32 +20,57 @@
 
 (defn update-screen!
   [screen entities]
-  (doseq [{:keys [x y player?]} entities]
+  (doseq [{:keys [camx camy player?]} entities]
     (when player?
-      (position! screen x y)))
+      (position! screen camx camy)))
   entities)
 
 (defn update-position
   "Moves the player by checking get-direction and then modifying x or y"
-  [screen entities {:keys [player? x y] :as entity} direction]
+  [screen entities {:keys [player? camx camy x y] :as entity} direction]
   (if player?
     (let [new-x (case direction
-                  :right (+ x speed)
-                  :left (- x speed)
-                  x)
+                      :right (+ x speed)
+                      :left (- x speed)
+                      x)
           new-y (case direction
-                  :up (+ y speed)
-                  :down (- y speed)
-                  y)]
-      (if (and (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
-               (not (en/isthereanybody new-x, new-y entities)))
-        (when-let [anim (get entity direction)]
+                      :up (+ y speed)
+                      :down (- y speed)
+                      y)
+          new-camx (case direction
+                         :right (+ camx speed)
+                         :left (- camx speed)
+                         camx)
+          new-camy (case direction
+                         :up (+ camy speed)
+                         :down (- camy speed)
+                         camy)]
+      (if (= mode :move)
+        (if (and (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
+                 (not (en/isthereanybody new-x, new-y entities)))
+          (when-let [anim (get entity direction)]
+            (merge entity
+                   anim
+                   {:x new-x :y new-y :camx new-x :camy new-y}))
           (merge entity
-                 anim
-                 {:x new-x :y new-y}))
+                 (get entity direction)))
         (merge entity
-          (get entity direction))))
-    entity))
+               {:camx new-camx :camy new-camy})))
+    (if (:cowboy? entity)
+      (do (let [direction (rand-nth [:down :up :left :right])
+                new-x (case direction
+                        :right (+ x speed)
+                        :left (- x speed)
+                        x)
+                new-y (case direction
+                        :up (+ y speed)
+                        :down (- y speed)
+                        y)]
+            (if (not (tiled-map-layer! (tiled-map-layer screen "casa") :get-cell new-x new-y))
+              (merge entity
+                     {:x new-x :y new-y})
+              entity)))
+      entity)))
 
 (defn move-all
   [screen entities direction]
@@ -66,7 +92,9 @@
       :x 1
       :y 1
       :width 1
-      :height 1)))
+      :height 1
+      :camx 1
+      :camy 1)))
 
 (defscreen main-screen
            :on-show
@@ -85,8 +113,9 @@
            :on-key-down
            (fn [screen entities]
              (cond
-               (key-pressed? :NUM_0) (.setVisible (tiled-map-layer screen "casa") false)
-               (key-pressed? :NUM_1) (.setVisible (tiled-map-layer screen "casa") true))
+               (key-pressed? :NUM_0) (.setVisible (tiled-map-layer screen 1) false)
+               (key-pressed? :NUM_1) (.setVisible (tiled-map-layer screen 1) true)
+               (key-pressed? :NUM_5) (def mode (if (= mode :move) :map :move)))
              (if-let [dir (get-direction)]
                (move-all screen entities dir)
                entities))
