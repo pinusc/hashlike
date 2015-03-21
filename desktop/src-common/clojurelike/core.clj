@@ -3,7 +3,6 @@
             [play-clj.g2d :refer :all]
             [play-clj.ui :refer :all]
             [clojurelike.entities :as en]))
-(def blue (color 63/255 124/255 172/255 1))
 (def speed 1)
 
 (declare main-screen)
@@ -41,7 +40,7 @@
                (not (en/isthereanybody new-x, new-y entities)))
         (when-let [anim (get entity direction)]
           (merge entity
-                 (get entity direction)
+                 anim
                  {:x new-x :y new-y}))
         (merge entity
           (get entity direction))))
@@ -74,7 +73,7 @@
            (fn [screen entities]
              (->> (orthogonal-tiled-map "map.tmx" (/ 1 16))
                   (update! screen :camera (orthographic) :renderer))
-             [(create-player) (en/create-cowboy)])
+             (conj entities (create-player) (en/create-cowboy)))
 
            :on-render
            (fn [screen entities]
@@ -94,7 +93,8 @@
 
            :on-resize
            (fn [screen entities]
-            (height! screen 16)))
+             (height! screen 16)
+             entities))
 
 (defgame clojurelike
   :on-create
