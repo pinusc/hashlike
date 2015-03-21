@@ -1,4 +1,4 @@
-(defproject clojurelike "0.0.1-SNAPSHOT"
+(defproject clojurelike "0.0.3-SNAPSHOT"
   :description "FIXME: write description"
   
   :dependencies [[com.badlogicgames.gdx/gdx "1.5.3"]
