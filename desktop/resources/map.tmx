@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="map" tilewidth="16" tileheight="16" spacing="4" margin="3">
+  <image source="map.png" width="82" height="22"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYmBgYBokmAUNDzX9TBTqHcWjmN4YAF9EAh0=
+  </data>
+ </layer>
+ <layer name="casa" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAOYMaBscnj0o9PbKD1EwK4/AsDjEiYHDDQ+ikFLEh4KOofrgAAPk8AeQ==
+  </data>
+ </layer>
+</map>

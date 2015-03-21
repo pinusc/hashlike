@@ -1,0 +1,32 @@
+map.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+glass
+  rotate: false
+  xy: 3, 3
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+grass
+  rotate: false
+  xy: 23, 3
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+mattoni
+  rotate: false
+  xy: 43, 3
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+wood
+  rotate: false
+  xy: 63, 3
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
