@@ -14,6 +14,7 @@
     (key-pressed? :dpad-left) :left
     (key-pressed? :dpad-up) :up
     (key-pressed? :dpad-down) :down
+    (key-pressed? :ENTER) :stay
     :else nil))
 
 (defn update-screen!
