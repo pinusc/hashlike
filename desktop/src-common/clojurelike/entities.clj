@@ -14,13 +14,15 @@
         py (:y player)
         x-dist (- x px)
         y-dist (- y py)]
-    (if (> (Math/abs x-dist) (Math/abs y-dist))
-      (if (> x-dist 0)
-        :left
-        :right)
-      (if (> y-dist 0)
-        :down
-        :up))))
+    (if (or (not= (Math/abs x-dist) 1) (not= (Math/abs y-dist) 1))
+      (if (> (Math/abs x-dist) (Math/abs y-dist))
+        (if (> x-dist 0)
+          :left
+          :right)
+        (if (> y-dist 0)
+          :down
+          :up))
+      :stay)))
 
 (defn update-position
   "Moves the player by checking get-direction and then modifying x or y"
