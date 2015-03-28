@@ -7,6 +7,21 @@
   [x y entities]
   (some #(and (= x (:x %)) (= y (:y %))) entities))
 
+(defn chase-player [x y entities]
+  "Returns the direction to take for chasing the player starting at the given coordinates"
+  (let [player (first (filter #(:player? %) entities))
+        px (:x player)
+        py (:y player)
+        x-dist (- x px)
+        y-dist (- y py)]
+    (if (> (Math/abs x-dist) (Math/abs y-dist))
+      (if (> x-dist 0)
+        :left
+        :right)
+      (if (> y-dist 0)
+        :down
+        :up))))
+
 (defn update-position
   "Moves the player by checking get-direction and then modifying x or y"
   [screen entities {:keys [player? camx camy x y] :as entity} direction]
@@ -39,7 +54,7 @@
         (merge entity
                {:camx new-camx :camy new-camy})))
     (if (:cowboy? entity)
-      (do (let [direction (rand-nth [:down :up :left :right])
+      (do (let [direction (chase-player x y entities)
                 new-x (case direction
                         :right (+ x speed)
                         :left (- x speed)
